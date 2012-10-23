@@ -2,7 +2,7 @@ package com.sprout.components
 {
 	import flash.events.EventDispatcher;
 
-	public class ContextMenuItem extends EventDispatcher
+	public class AdvancedContextMenuItem extends EventDispatcher
 	{
 		public var caption:String;
 		public var separatorBefore:Boolean;
@@ -11,7 +11,7 @@ package com.sprout.components
 		public var visible:Boolean;
 		public var children:Array;
 		
-		public function ContextMenuItem(caption:String,separatorBefore:Boolean = false,enabled:Boolean = true,visible:Boolean = true)
+		public function AdvancedContextMenuItem(caption:String,separatorBefore:Boolean = false,enabled:Boolean = true,visible:Boolean = true)
 		{
 			this.caption = caption;
 			this.separatorBefore = separatorBefore;

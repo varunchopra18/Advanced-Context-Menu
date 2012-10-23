@@ -5,10 +5,10 @@ package com.sprout.components
 	import mx.collections.ArrayCollection;
 	import mx.controls.Menu;
 
-	public class ContextMenu
+	public class AdvancedContextMenu
 	{
 		private var myMenu:Menu;
-		public function ContextMenu()
+		public function AdvancedContextMenu()
 		{
 			_menuDataProvider = new ArrayCollection();
 		}
@@ -26,23 +26,41 @@ package com.sprout.components
 			_menuDataProvider = new ArrayCollection();
 			if(_originalContextMenu)
 			{
-				return makeCustomeContextMenu(_originalContextMenu);
+				return makeCustomContextMenu(_originalContextMenu);
 			}
 			return new ArrayCollection();
 		}
 		
-		private function makeCustomeContextMenu(contextMenu:flash.ui.ContextMenu):ArrayCollection
+		private function makeCustomContextMenu(contextMenu:flash.ui.ContextMenu):ArrayCollection
 		{
-			for each(var menuItem:ContextMenuItem in contextMenu.customItems)
+			for each(var menuItem:Object in contextMenu.customItems)
 			{
 				if(menuItem.separatorBefore)
 				{
 					addSeparator();
 				}
 				
-				_menuDataProvider.addItem(menuItem);
+				addItem(menuItem);
+				
 			}
 			return _menuDataProvider;
+		}
+		
+		private function addItem(item:Object):void
+		{
+			if(item is flash.ui.ContextMenuItem)
+			{
+				_menuDataProvider.addItem(convertObject(item as flash.ui.ContextMenuItem));
+			}
+			else
+			{
+				_menuDataProvider.addItem(item);
+			}
+		}
+		
+		private function convertObject(contextMenuItem:flash.ui.ContextMenuItem):AdvancedContextMenuItem
+		{
+			return new AdvancedContextMenuItem(contextMenuItem.caption,contextMenuItem.separatorBefore,contextMenuItem.enabled,contextMenuItem.visible);
 		}
 		
 		public function addContextMenu(contextMenu:flash.ui.ContextMenu):void

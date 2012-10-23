@@ -1,6 +1,7 @@
 package com.sprout.components
 {
 	import flash.display.DisplayObjectContainer;
+	import flash.display.InteractiveObject;
 	import flash.events.ContextMenuEvent;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
@@ -39,7 +40,7 @@ package com.sprout.components
 				myMenu.show();
 			}
 		}
-
+		
 		public static function get instance():ContextMenuManager
 		{
 			if(!_instance)
@@ -55,36 +56,34 @@ package com.sprout.components
 		
 		public function addContextMenu(view:UIComponent):void
 		{
-			try
-			{
-				var cmm:ContextMenu = new  ContextMenu();
-				cmm.addContextMenu(view.contextMenu);
-				_menuViewMap[view] = cmm;
-				view.addEventListener(MouseEvent.RIGHT_CLICK,rightClickHandler);
-			}
-			catch(e:Error)
-			{
-				throw new Error(e.message);
-			}
+			var cmm:AdvancedContextMenu = new  AdvancedContextMenu();
+			cmm.addContextMenu(view.contextMenu);
+			_menuViewMap[view] = cmm;
+			view.addEventListener(MouseEvent.RIGHT_CLICK,rightClickHandler,true);
 		}
 		
-		public function addContextMenuToView(view:IEventDispatcher,menu:ContextMenu):void
+		public function addContextMenuToView(view:IEventDispatcher,menu:AdvancedContextMenu):void
 		{
 			_menuViewMap[view] = menu;
-			view.addEventListener(MouseEvent.RIGHT_CLICK,rightClickHandler);
+			view.addEventListener(MouseEvent.RIGHT_CLICK,rightClickHandler,true);
 		}
 		
 		private function rightClickHandler(event:MouseEvent):void
 		{
-			showMenu(event.target,_menuViewMap[event.currentTarget],event.stageX,event.stageY);
+			var targetObj:Object = _menuViewMap[event.target] ?  event.target : event.currentTarget;
+			if(_menuViewMap[targetObj])
+			{
+				showMenu(targetObj,_menuViewMap[targetObj],event.stageX,event.stageY,event.target);
+			}
 		}
 		
-		private function showMenu(view:Object,menu:ContextMenu,xPos:Number,yPos:Number):void 
+		private function showMenu(view:Object,menu:AdvancedContextMenu,xPos:Number,yPos:Number,target:Object):void 
 		{
 			if(myMenu)
 			{
 				myMenu.hide();
 			}
+			menu.addContextMenu(view.contextMenu);
 			if(!menu.originalContextMenu)
 			{
 				return;
@@ -93,7 +92,15 @@ package com.sprout.components
 			myMenu = Menu.createMenu(_application, menu.menuDataProvider, false);
 			myMenu.labelField = "caption";
 			myMenu.variableRowHeight = true;
-			myMenu.addEventListener(MenuEvent.ITEM_CLICK, menuHandler);
+			myMenu.addEventListener(MenuEvent.ITEM_CLICK, 
+				function menuHandler(event:MenuEvent):void
+				{
+					IEventDispatcher(event.item).dispatchEvent(
+						new ContextMenuEvent(ContextMenuEvent.MENU_ITEM_SELECT,false,false,target as InteractiveObject));
+				}
+
+			
+			);
 			myMenu.addEventListener(MouseEvent.RIGHT_CLICK, menuRightClickDummyHandler);
 			
 			myMenu.show(xPos, yPos);
@@ -108,13 +115,11 @@ package com.sprout.components
 		
 		protected function menuRightClickDummyHandler(event:MouseEvent):void
 		{
-			// TODO Auto-generated method stub
-			
 		}
 		
 		protected function menuHandler(event:MenuEvent):void
 		{
-			ContextMenuItem(event.item).dispatchEvent(new ContextMenuEvent(ContextMenuEvent.MENU_ITEM_SELECT));
+			IEventDispatcher(event.item).dispatchEvent(new ContextMenuEvent(ContextMenuEvent.MENU_ITEM_SELECT));
 		}
 	}
 }
