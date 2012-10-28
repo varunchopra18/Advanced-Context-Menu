@@ -14,20 +14,22 @@ Internally we create a mx:Menu component and show it. Styling can also be applie
 
 ## Usage ##
 
-set application url:
+set application instance:
 
 ```actionscript
 ContextMenuManager.instance.application = this;
 ```
 
-assign com.sprout.components.ContextMenuItem inplace of flash.ui.ContextMenuItem and use it in the same way:
+use com.sprout.components.AdvancedContextMenuItem inplace of flash.ui.ContextMenuItem for sub-menus, it can be used in hybrid form. Use AdvancedContextMenuItem when you need sub menus and ContextMenuItem in other places :
 
 ```actionscript
-var menu1:com.sprout.components.ContextMenuItem = new com.sprout.components.ContextMenuItem('menu 1');
+var menu1:ContextMenuItem = new ContextMenuItem('menu 1');
+var menu2:AdvancedContextMenuItem = new AdvancedContextMenuItem('menu 2');
 this.contextMenu.customItems.push(menu1);
+this.contextMenu.customItems.push(menu2);
 ```
 
-set component instance on which right click action will be done:
+set component instance on which right click action will show the advanced context menu:
 
 ```actionscript
 ContextMenuManager.instance.addContextMenu(this);
@@ -36,15 +38,15 @@ ContextMenuManager.instance.addContextMenu(this);
 adding submenus:
 
 ```actionscript
-var menu1:com.sprout.components.ContextMenuItem = new com.sprout.components.ContextMenuItem('menu 1');
+var menu1:ContextMenuItem = new ContextMenuItem('menu 1');
   			
-var menu2:com.sprout.components.ContextMenuItem = new com.sprout.components.ContextMenuItem('menu 2');
+var menu2:AdvancedContextMenuItem = new AdvancedContextMenuItem('menu 2');
 
-var submenu1:com.sprout.components.ContextMenuItem = new com.sprout.components.ContextMenuItem('sub menu1');
-var submenu2:com.sprout.components.ContextMenuItem = new com.sprout.components.ContextMenuItem('sub menu2');
+var submenu1:ContextMenuItem = new ContextMenuItem('sub menu1');
+var submenu2:ContextMenuItem = new ContextMenuItem('sub menu2');
 
 menu2.children = [submenu1,submenu2];
 
 this.contextMenu.customItems.push(menu1);
-this.contextMenu.customItems.push(menu2);;
+this.contextMenu.customItems.push(menu2);
 ```
