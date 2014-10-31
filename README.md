@@ -1,7 +1,7 @@
 Advanced-Context-Menu
 =====================
 
-## Incides ##
+## Insides ##
 
 Internally we create a mx:Menu component and show it. Styling can also be applied to it.
 
